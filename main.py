@@ -3,6 +3,15 @@ import store
 
 
 def make_order(store):
+    """
+    Present a menu of products and quantities to the user, and
+    return an order (a list of (product, quantity) tuples) to the caller.
+
+    :param store: the store to order from
+    :type store: Store
+    :return: the order
+    :rtype: list of (Product, int)
+    """
     shopping_list = []
     products = store.get_all_products()
     while True:
@@ -28,6 +37,13 @@ def make_order(store):
     
 
 def start(store):
+    """
+    Present a menu of options to the user, and respond to the user's
+    choices by calling other functions.
+
+    :param store: the store to interact with
+    :type store: Store
+    """
     while True:
         print("Store Menu\n----------")
         print("1. List all products in store")
@@ -52,6 +68,12 @@ def start(store):
 
 def main():
     # setup initial stock of inventory
+    """
+    The main entry point for the program.
+
+    Sets up an initial store with some products, and then enters a loop
+    where it repeatedly asks the user for input.
+    """
     product_list = [products.Product("MacBook Air M2", 1450, 100),
                 products.Product("Bose QuietComfort Earbuds", 250, 500),
                 products.Product("Google Pixel 7", 500, 250)]
