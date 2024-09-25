@@ -42,6 +42,8 @@ class Product:
         :type quantity: int
         """
         self.quantity = quantity
+        if self.quantity <= 0:
+            self.deactivate()
 
 
     def is_active(self):
@@ -102,6 +104,8 @@ class Product:
         if self.quantity < quantity:
             raise ValueError("Quantity not available in stock")
         self.quantity -= quantity
+        if self.quantity <= 0:
+            self.deactivate()
         return quantity * self.price
 
 
