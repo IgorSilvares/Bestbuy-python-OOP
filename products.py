@@ -42,9 +42,11 @@ class Product:
         :type quantity: int
         """
         self.quantity = quantity
+
         if self.quantity <= 0:
             self.deactivate()
-
+        if self.quantity > 0:
+            self.activate()
 
     def is_active(self):
         """
