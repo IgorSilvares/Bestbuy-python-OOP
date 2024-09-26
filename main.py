@@ -1,5 +1,6 @@
-import products
+import products 
 import store
+from products import LimitedProduct
 
 
 def make_order(store):
@@ -30,7 +31,16 @@ def make_order(store):
                 raise ValueError
                 continue
             product = products[product_number - 1]
-            quantity = int(input("How many do you want? "))
+            if isinstance(product, LimitedProduct):
+                max_quantity = product.maximum
+            else:
+                max_quantity = product.get_quantity()
+            while True:
+                quantity = int(input("How many do you want? "))
+                if quantity <= 0 or quantity > max_quantity:
+                    print("Invalid quantity. Please try again or enter empty text to cancelR." + "\n")
+                else:
+                    break
             shopping_list.append((product, quantity))
         except ValueError:
             print("Product number should be a number." + "\n")
@@ -74,9 +84,13 @@ def main():
     Sets up an initial store with some products, and then enters a loop
     where it repeatedly asks the user for input.
     """
-    product_list = [products.Product("MacBook Air M2", 1450, 100),
-                products.Product("Bose QuietComfort Earbuds", 250, 500),
-                products.Product("Google Pixel 7", 500, 250)]
+# setup initial stock of inventory
+    product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
+                 products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+                 products.Product("Google Pixel 7", price=500, quantity=250),
+                 products.NonStockedProduct("Windows License", price=125),
+                 products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+               ]
     best_buy = store.Store(product_list)
     start(best_buy)
 

@@ -49,16 +49,17 @@ class Store:
     
     def get_total_quantity(self):
         """
-        Return the total quantity of all products in the store.
+        Return the total quantity of all products in the store that are not unlimited in quantity.
 
-        :return: the total quantity of all products in the store
-        :rtype: int
+        :return: the total quantity of limited products, or a string indicating unlimited quantities of all products
+        :rtype: int or str
         """
         total_quantity = 0
         for product in self.product_list:
-            total_quantity += product.get_quantity()
-        return total_quantity
-
+            quantity = product.get_quantity()
+            if quantity != float("inf"):
+                total_quantity += quantity
+        return total_quantity if total_quantity > 0 else "Unlimited quantities of all products"
 
     def order(self, shopping_list):
         """

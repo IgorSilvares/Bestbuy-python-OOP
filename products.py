@@ -86,7 +86,9 @@ class Product:
         :return: a string describing the product
         :rtype: str
         """
-        return (f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        quantity = self.get_quantity()
+        return (f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}")
+
 
     
     def buy(self, quantity):
@@ -99,9 +101,7 @@ class Product:
         :rtype: int
         :raises ValueError: if the given quantity is not available in stock
         """
-        if self.quantity is None:
-            raise ValueError("Quantity should be greater than 0")
-        if quantity <= 0:
+        if self.quantity is None or quantity <= 0:
             raise ValueError("Quantity should be greater than 0")
         if self.quantity < quantity:
             raise ValueError("Quantity not available in stock")
@@ -110,6 +110,78 @@ class Product:
             self.deactivate()
         return quantity * self.price
 
+
+class NonStockedProduct(Product):
+    def __init__(self, name, price):
+        """
+        Initialize a NonStockedProduct object with the given name and price.
+
+        :param name: the name of the product
+        :type name: str
+        :param price: the price of the product
+        :type price: int
+        """
+        super().__init__(name, price, float("inf"))
+
+    def get_quantity(self):
+        """
+        Return the quantity of the product.
+
+        :return: the quantity of the product
+        :rtype: int
+        """
+        
+        return float("inf")
+
+    def show(self):
+        """
+        Return a string describing the product.
+
+        :return: a string describing the product
+        :rtype: str
+        """
+        return (f"{self.name}, Price: ${self.price}, Quantity: Unlimited")
+
+class LimitedProduct(Product):
+    def __init__(self, name, price, quantity, maximum):
+        """
+        Initialize a LimitedProduct object with the given name, price, quantity, and maximum.
+
+        :param name: the name of the product
+        :type name: str
+        :param price: the price of the product
+        :type price: int
+        :param quantity: the quantity of the product
+        :type quantity: int
+        :param maximum: the maximum amount that can be ordered in one order
+        :type maximum: int
+        """
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def buy(self, quantity):
+        """
+        Buy the given quantity of the product.
+
+        :param quantity: the quantity of the product to buy
+        :type quantity: int
+        :return: the total cost of the given quantity of the product
+        :rtype: int
+        :raises ValueError: if the given quantity is not available in stock
+        :raises ValueError: if the given quantity exceeds the maximum allowed
+        """
+        if quantity > self.maximum:
+            raise ValueError("Quantity exceeds maximum allowed")
+        return super().buy(quantity)
+
+    def show(self):
+        """
+        Return a string describing the product.
+
+        :return: a string describing the product
+        :rtype: str
+        """
+        return (f"{self.name}, Price: ${self.price}, limited to {self.maximum} per order.")
 
 
 
