@@ -96,13 +96,13 @@ class Product:
     
     def buy(self, quantity):
         """
-        Buy the given quantity of the product.
+        Buy a given quantity of the product.
 
         :param quantity: the quantity of the product to buy
         :type quantity: int
         :return: the total cost of the given quantity of the product
-        :rtype: int
-        :raises ValueError: if the given quantity is not available in stock
+        :rtype: float
+        :raises ValueError: if the given quantity is invalid or not available in stock
         """
         if self.quantity is None or quantity <= 0:
             raise ValueError("Quantity should be greater than 0")
