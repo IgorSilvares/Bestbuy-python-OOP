@@ -1,3 +1,5 @@
+import promotions
+
 class Product:
     def __init__(self, name, price, quantity):
         """
@@ -23,6 +25,7 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.active = True
+        self.promotion = None
 
     def get_quantity(self):
         """
@@ -87,8 +90,8 @@ class Product:
         :rtype: str
         """
         quantity = self.get_quantity()
-        return (f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}")
-
+        promotion = self.get_promotion()
+        return (f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}, Promotion: {promotion}")
 
     
     def buy(self, quantity):
@@ -108,7 +111,31 @@ class Product:
         self.quantity -= quantity
         if self.quantity <= 0:
             self.deactivate()
-        return quantity * self.price
+
+        if self.promotion != None:
+            return self.promotion.apply_promotion(self, quantity)
+        else:
+            return quantity * self.price
+
+
+    def set_promotion(self, promotion):
+        """
+        Set the promotion for the product.
+
+        :param promotion: the promotion to set
+        :type promotion: Promotion
+        """
+        self.promotion = promotion
+
+        
+    def get_promotion(self):
+        """
+        Return the promotion for the product.
+
+        :return: the promotion for the product
+        :rtype: Promotion
+        """
+        return self.promotion
 
 
 class NonStockedProduct(Product):
@@ -140,7 +167,8 @@ class NonStockedProduct(Product):
         :return: a string describing the product
         :rtype: str
         """
-        return (f"{self.name}, Price: ${self.price}, Quantity: Unlimited")
+        promotion = self.get_promotion()
+        return (f"{self.name}, Price: ${self.price}, Quantity: Unlimited, Promotion: {promotion}")
 
 class LimitedProduct(Product):
     def __init__(self, name, price, quantity, maximum):
@@ -174,6 +202,7 @@ class LimitedProduct(Product):
             raise ValueError("Quantity exceeds maximum allowed")
         return super().buy(quantity)
 
+
     def show(self):
         """
         Return a string describing the product.
@@ -181,7 +210,8 @@ class LimitedProduct(Product):
         :return: a string describing the product
         :rtype: str
         """
-        return (f"{self.name}, Price: ${self.price}, limited to {self.maximum} per order.")
+        promotion = self.get_promotion()
+        return (f"{self.name}, Price: ${self.price}, limited to {self.maximum} per order! Promotion: {promotion}")
 
 
 
